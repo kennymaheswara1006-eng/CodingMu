@@ -105,27 +105,30 @@ function LearnPage() {
                   const offset = i % 2 === 0 ? "translate-x-0" : "translate-x-16 sm:translate-x-24";
                   return (
                     <div key={lesson.id} className={`flex items-center gap-3 ${offset} transition-transform`}>
-                      <Link
-                        to="/lesson/$id"
-                        params={{ id: lesson.id }}
-                        disabled={!lessonUnlocked}
-                        onClick={(e) => {
-                          if (!lessonUnlocked) e.preventDefault();
-                        }}
-                        className={`group relative h-20 w-20 rounded-full flex items-center justify-center text-3xl border-4 transition-all ${
-                          isCompleted
-                            ? "bg-success-grad border-cyan-300 glow-cyan"
-                            : lessonUnlocked
-                              ? "bg-button-grad border-purple-300 glow-purple animate-pulse-glow"
-                              : "bg-locked-grad border-purple-900/50 opacity-60 cursor-not-allowed"
-                        }`}
-                        aria-label={lesson.title}
-                      >
-                        {isCompleted ? "✓" : lessonUnlocked ? lesson.icon : <Lock className="h-6 w-6" />}
-                        {lessonUnlocked && !isCompleted && (
-                          <Play className="absolute -bottom-1 -right-1 h-6 w-6 p-1 rounded-full bg-neon-yellow text-bg-primary fill-current" />
-                        )}
-                      </Link>
+                      {lessonUnlocked ? (
+                        <Link
+                          to="/lesson/$id"
+                          params={{ id: lesson.id }}
+                          className={`group relative h-20 w-20 rounded-full flex items-center justify-center text-3xl border-4 transition-all ${
+                            isCompleted
+                              ? "bg-success-grad border-cyan-300 glow-cyan"
+                              : "bg-button-grad border-purple-300 glow-purple animate-pulse-glow"
+                          }`}
+                          aria-label={lesson.title}
+                        >
+                          {isCompleted ? "✓" : lesson.icon}
+                          {!isCompleted && (
+                            <Play className="absolute -bottom-1 -right-1 h-6 w-6 p-1 rounded-full bg-neon-yellow text-bg-primary fill-current" />
+                          )}
+                        </Link>
+                      ) : (
+                        <div
+                          className="h-20 w-20 rounded-full flex items-center justify-center text-3xl border-4 bg-locked-grad border-purple-900/50 opacity-60 cursor-not-allowed"
+                          aria-label={`${lesson.title} (terkunci)`}
+                        >
+                          <Lock className="h-6 w-6" />
+                        </div>
+                      )}
                       <div className="hidden sm:block">
                         <p className="font-display font-semibold leading-tight">{lesson.title}</p>
                         <p className="text-xs text-text-muted">{lesson.description}</p>
