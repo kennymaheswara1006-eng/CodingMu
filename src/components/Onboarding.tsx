@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { Sound } from "@/lib/sound";
-import { defaultProfile, getProfile, saveProfile, type Lang } from "@/lib/storage";
+import { defaultProfile, getProfile, getProgress, saveProfile, saveProgress, type Lang } from "@/lib/storage";
 import { t } from "@/lib/i18n";
 
 const AVATARS = ["🦊", "🐱", "🐼", "🦁", "🐸", "🦉", "🦄", "🐲", "🦋", "🐙", "🦈", "🐧"];
@@ -38,7 +38,6 @@ export function Onboarding() {
     saveProfile(p);
 
     if (partial && "goal" in partial && partial.goal) {
-      const { getProgress, saveProgress } = require("@/lib/storage") as typeof import("@/lib/storage");
       const pg = getProgress();
       pg.daily_goal.target_minutes = partial.goal;
       saveProgress(pg);
