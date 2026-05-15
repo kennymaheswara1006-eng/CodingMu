@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LessonIdRouteImport } from './routes/lesson.$id'
@@ -17,6 +18,11 @@ import { Route as AppPracticeRouteImport } from './routes/_app.practice'
 import { Route as AppLearnRouteImport } from './routes/_app.learn'
 import { Route as AppLeaderboardRouteImport } from './routes/_app.leaderboard'
 
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AppRoute = AppRouteImport.update({
   id: '/_app',
   getParentRoute: () => rootRouteImport,
@@ -54,6 +60,7 @@ const AppLeaderboardRoute = AppLeaderboardRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/leaderboard': typeof AppLeaderboardRoute
   '/learn': typeof AppLearnRoute
   '/practice': typeof AppPracticeRoute
@@ -62,6 +69,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/leaderboard': typeof AppLeaderboardRoute
   '/learn': typeof AppLearnRoute
   '/practice': typeof AppPracticeRoute
@@ -72,6 +80,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_app': typeof AppRouteWithChildren
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/_app/leaderboard': typeof AppLeaderboardRoute
   '/_app/learn': typeof AppLearnRoute
   '/_app/practice': typeof AppPracticeRoute
@@ -82,17 +91,26 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/sitemap.xml'
     | '/leaderboard'
     | '/learn'
     | '/practice'
     | '/profile'
     | '/lesson/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/leaderboard' | '/learn' | '/practice' | '/profile' | '/lesson/$id'
+  to:
+    | '/'
+    | '/sitemap.xml'
+    | '/leaderboard'
+    | '/learn'
+    | '/practice'
+    | '/profile'
+    | '/lesson/$id'
   id:
     | '__root__'
     | '/'
     | '/_app'
+    | '/sitemap.xml'
     | '/_app/leaderboard'
     | '/_app/learn'
     | '/_app/practice'
@@ -103,11 +121,19 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   LessonIdRoute: typeof LessonIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_app': {
       id: '/_app'
       path: ''
@@ -179,6 +205,7 @@ const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   LessonIdRoute: LessonIdRoute,
 }
 export const routeTree = rootRouteImport
